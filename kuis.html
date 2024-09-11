@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Kedatangan Bangsa Eropa ke Indonesia</title>
+    <link rel="stylesheet" href="kuis.css">
+    <link rel="shortcut icon" href="./asset/logo/favicon.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 class="fade-in">Kuis Kedatangan Bangsa Eropa Ke Indonesia</h1>
+    </header>
+
+    <main>
+        <section id="kuis">
+            <div class="quiz-container">
+                <h2 class="fade-in left-align">Uji Pengetahuan Anda tentang Kedatangan Bangsa Eropa Ke Indonesia</h2>
+                <div id="quiz-container"></div>
+                <button class="fade-in" id="submit-quiz">Kirim Jawaban</button>
+                <div id="quiz-results" class="hidden"></div>
+                <button class="fade-in" id="restart-quiz" style="display: none;">Ulang Kuis</button>
+            </div>
+        </section>
+
+        <section id="navigation">
+            <a href="./index.html" class="back-button fade-in">Kembali ke Beranda</a>
+        </section>
+    </main>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    $(document).ready(function() {
+        // Function to check if an element is in the viewport
+        function isElementInViewport(el) {
+            var rect = el.getBoundingClientRect();
+            var windowHeight = $(window).height();
+            var windowTop = $(window).scrollTop();
+            var windowBottom = windowTop + windowHeight;
+
+            // Check if the element is within the viewport
+            return (rect.top + windowTop <= windowBottom) && (rect.bottom + windowTop >= windowTop);
+        }
+
+        function checkFade() {
+            $('.fade-in').each(function() {
+                var $element = $(this);
+                
+                if (isElementInViewport(this)) {
+                    $element.addClass('visible');
+                } else {
+                    $element.removeClass('visible');
+                }
+            });
+        }
+
+        // Initial check
+        checkFade();
+
+        // Check on scroll
+        $(window).on('scroll', checkFade);
+
+        // Check on resize (to handle changes in viewport size)
+        $(window).on('resize', checkFade);
+    });
+
+    const quizContainer = document.getElementById('quiz-container');
+    const submitButton = document.getElementById('submit-quiz');
+    const resultsContainer = document.getElementById('quiz-results');
+    const restartButton = document.getElementById('restart-quiz');
+
+
+    // Data pertanyaan kuis sungguhan dengan penjelasan
+    const allQuestions = [
+    {
+        "question": "Manakah dari berikut ini yang MENJADI alasan utama bangsa Eropa datang ke Indonesia pada masa lalu?",
+        "options": [
+            "Mencari rempah-rempah",
+            "Menyebarkan agama Kristen",
+            "Menjelajahi dunia baru",
+            "Semua jawaban benar"
+        ],
+        "answer": "Mencari rempah-rempah",
+        "explanation": "Rempah-rempah menjadi komoditas yang sangat berharga di Eropa pada masa itu, dan Indonesia dikenal sebagai penghasil rempah-rempah utama."
+    },
+    {
+        "question": "Bagaimana warisan kolonialisme memengaruhi struktur politik Indonesia saat ini?",
+        "options": [
+            "Tidak ada pengaruh sama sekali",
+            "Mendorong terbentuknya sistem politik yang sangat demokratis",
+            "Meninggalkan jejak dalam sistem pemerintahan dan birokrasi ",
+            "Membuat Indonesia menjadi negara monarki"
+        ],
+        "answer": "Meninggalkan jejak dalam sistem pemerintahan dan birokrasi",
+        "explanation": "Sistem pemerintahan kolonial, seperti birokrasi dan sentralisasi kekuasaan, masih meninggalkan pengaruh pada struktur politik Indonesia hingga kini."
+    },
+    {
+        "question": "Manakah yang merupakan contoh dampak positif dari kolonialisme terhadap Indonesia?",
+        "options": [
+            "Perbudakan",
+            "Pembangunan infrastruktur",
+            "Sistem tanam paksa",
+            "Perpecahan masyarakat"
+        ],
+        "answer": "Pembangunan infrastruktur ",
+        "explanation": "Meskipun banyak dampak negatif, kolonialisme juga membawa beberapa dampak positif seperti pembangunan infrastruktur, meskipun seringkali demi kepentingan penjajah."
+    },
+    {
+        "question": "Bagaimana kita dapat memanfaatkan sejarah kolonialisme untuk membangun masa depan yang lebih baik?",
+        "options": [
+            "Melupakan masa lalu dan fokus pada masa depan",
+            "Menyalahkan bangsa penjajah atas semua masalah",
+            "Belajar dari kesalahan masa lalu untuk memperbaiki masa depan",
+            "Menutup diri dari pengaruh asing"
+        ],
+        "answer": "Belajar dari kesalahan masa lalu untuk memperbaiki masa depan ",
+        "explanation": "Memahami sejarah kolonialisme dapat membantu kita menghindari kesalahan yang sama dan membangun masa depan yang lebih baik.."
+    },
+    {
+        "question": "Manakah dari berikut ini yang merupakan dampak tidak langsung dari sistem tanam paksa yang diterapkan oleh Belanda?",
+        "options": [
+            "Meningkatnya produksi komoditas ekspor",
+            "Kemerosotan produksi pangan untuk konsumsi lokal",
+            "Munculnya perlawanan rakyat",
+            "Terhambatnya industrialisasi di Indonesia"
+        ],
+        "answer": "Terhambatnya industrialisasi di Indonesia",
+        "explanation": "Fokus pada produksi komoditas ekspor yang besar-besaran menghambat perkembangan industri dalam negeri."
+    },
+    {
+        "question": "Bagaimana kolonialisme memengaruhi struktur sosial di Indonesia?",
+        "options": [
+            "Memperkuat struktur sosial yang ada sebelumnya",
+            "Menciptakan stratifikasi sosial baru berdasarkan ras dan kelas",
+            "Mendorong persamaan sosial antar kelompok",
+            "Tidak ada perubahan signifikan"
+        ],
+        "answer": "Menciptakan stratifikasi sosial baru berdasarkan ras dan kelas",
+        "explanation": "Kolonialisme menciptakan hierarki sosial baru dengan menempatkan orang Eropa di puncak dan pribumi di bawah."
+    },
+    {
+        "question": "Konsep asimilasi dalam kebijakan kolonial Belanda bertujuan untuk? ",
+        "options": [
+            "Memberikan kemerdekaan kepada bangsa Indonesia",
+            "Menyerap penduduk pribumi ke dalam budaya Belanda",
+            "Mengembangkan ekonomi pribumi",
+            "Melindungi budaya asli Indonesia"
+        ],
+        "answer": "Menyerap penduduk pribumi ke dalam budaya Belanda",
+        "explanation": "Kebijakan asimilasi bertujuan untuk mengubah pribumi agar menyerupai orang Belanda."
+    },
+    {
+        "question": "Perlawanan rakyat Indonesia terhadap kolonialisme seringkali mengalami kegagalan. Faktor apa yang paling mempengaruhi kegagalan tersebut?",
+        "options": [
+            "Kurangnya dukungan dari negara lain",
+            "Perbedaan kepentingan antar kelompok perlawanan",
+            "Kekurangan sumber daya alam",
+            "Kurangnya semangat juang"
+        ],
+        "answer": "Perbedaan kepentingan antar kelompok perlawanan",
+        "explanation": "Perbedaan kepentingan dan kurangnya koordinasi antar kelompok perlawanan seringkali menjadi kendala utama."
+    },
+    {
+        "question": "Bagaimana kolonialisme memengaruhi perkembangan kebudayaan Indonesia?",
+        "options": [
+            "Terjadi akulturasi antara budaya asli dan budaya kolonial",
+            "Budaya asli Indonesia tetap murni",
+            "Budaya kolonial sepenuhnya menggantikan budaya asli",
+            "Tidak ada pengaruh sama sekali"
+        ],
+        "answer": "Terjadi akulturasi antara budaya asli dan budaya kolonial",
+        "explanation": "Kontak dengan budaya kolonial menyebabkan terjadinya percampuran dan perubahan dalam budaya Indonesia."
+    },
+    {
+        "question": "Bagaimana kolonialisme memengaruhi perkembangan kebudayaan Indonesia?",
+        "options": [
+            "Terjadi akulturasi antara budaya asli dan budaya kolonial",
+            "Budaya asli Indonesia tetap murni",
+            "Budaya kolonial sepenuhnya menggantikan budaya asli",
+            "Tidak ada pengaruh sama sekali"
+        ],
+        "answer": "Terjadi akulturasi antara budaya asli dan budaya kolonial",
+        "explanation": "Kontak dengan budaya kolonial menyebabkan terjadinya percampuran atau akulturasi budaya. Banyak aspek budaya Indonesia yang dipengaruhi oleh budaya Belanda, baik dalam seni, bahasa, maupun arsitektur."
+    },
+    ];
+
+    // Mengacak dan memilih 10 pertanyaan dari 20
+    const shuffleAndSelectQuestions = (questions, numQuestions) => {
+        const shuffled = questions.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, numQuestions);
+    };
+
+    const quizData = shuffleAndSelectQuestions(allQuestions, 10);
+
+    let output = '';
+    quizData.forEach((question, index) => {
+        output += `
+            <div class="quiz-question">
+                <p class="fade-in">${index + 1}. ${question.question}</p>
+                <div class="options fade-in left-align">
+                    ${question.options.map((option, i) => `
+                        <button class="option-button" data-question="${index}" data-option="${option}">
+                            ${String.fromCharCode(65 + i)}. ${option}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+    quizContainer.innerHTML = output;
+
+    submitButton.addEventListener('click', function() {
+        const answers = [];
+        quizData.forEach((question, index) => {
+            const selectedOption = document.querySelector(`button[data-question="${index}"].selected`);
+            if (selectedOption) {
+                answers.push({
+                    question: question.question,
+                    answer: selectedOption.getAttribute('data-option'),
+                    correct: selectedOption.getAttribute('data-option') === question.answer
+                });
+            }
+        });
+
+        let results = '<h3 class="result-h3 fade-in">Hasil Kuis</h3>';
+        let score = 0;
+        answers.forEach(answer => {
+            if (answer.correct) score++;
+            results += `
+                <div class="result-item">
+                    <p class="fade-in left-align"><strong>Pertanyaan:</strong> ${answer.question}</p>
+                    <p class="fade-in left-align"><strong>Jawaban Kamu:</strong> ${answer.answer}</p>
+                    <p class="fade-in left-align"><strong>Jawaban Benar:</strong> ${answer.correct ? answer.answer : quizData.find(q => q.question === answer.question).answer}</p>
+                    ${!answer.correct ? `<p class="explanation fade-in left-align">Penjelasan: ${quizData.find(q => q.question === answer.question).explanation}</p>` : ''}
+                    ${answer.correct ? `<p class="explanation-correct fade-in left-align">Penjelasan: Benar ${quizData.find(q => q.question === answer.question).explanation}</p>` : ''}
+                </div>
+            `;
+        });
+
+        results += `<p class="score fade-in"><strong>Skor Anda:</strong> ${score} / ${quizData.length}</p>`;
+        resultsContainer.innerHTML = results;
+        resultsContainer.classList.remove('hidden');
+
+        // Menandai tombol yang benar dan salah
+        quizData.forEach((question, index) => {
+            const buttons = document.querySelectorAll(`button[data-question="${index}"]`);
+            buttons.forEach(button => {
+                if (button.getAttribute('data-option') === question.answer) {
+                    button.classList.add('correct');
+                } else if (button.classList.contains('selected')) {
+                    button.classList.add('incorrect');
+                }
+            });
+        });
+
+        // Nonaktifkan semua tombol setelah kirim jawaban
+        document.querySelectorAll('button.option-button').forEach(button => {
+            button.disabled = true;
+        });
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
+        restartButton.style.display = 'inline-block';
+    });
+    restartButton.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(function() {
+            location.reload();
+        }, 1500); 
+    });
+
+
+    // Menandai tombol yang dipilih
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('option-button')) {
+            const buttons = document.querySelectorAll(`button[data-question="${e.target.getAttribute('data-question')}"]`);
+            buttons.forEach(button => button.classList.remove('selected'));
+            e.target.classList.add('selected');
+        }
+    });
+});
+    </script>
+</body>
+</html>
